@@ -1,10 +1,10 @@
-# MLOP Pipeline Implementation
+# MLOPS Pipeline Implementation
 
-This project represents my implementation of a machine learning operations (MLOP) pipeline, combining ML model development with DevOps practices. It's designed to demonstrate how to effectively deploy and manage ML models in a production environment.
+This project represents my implementation of a machine learning operations (MLOPS) pipeline, combining ML model development with DevOps practices. It's designed to demonstrate how to effectively deploy and manage ML models in a production environment.
 
 ## Project Overview
 
-Here's the structure of my MLOP pipeline implementation:
+Here's the structure of my MLOPS pipeline implementation:
 
 ```
 .
@@ -18,7 +18,7 @@ Here's the structure of my MLOP pipeline implementation:
 
 ## Tech Stuff I Used
 
-- **Backend**: Flask (because it's simple and works great for APIs)
+- **Backend**: Flask (simple and works great for APIs)
 - **ML**: scikit-learn (for the Random Forest model)
 - **Data**: NumPy (for handling the numbers)
 - **Container**: Docker (to make deployment easy)
@@ -26,10 +26,9 @@ Here's the structure of my MLOP pipeline implementation:
 ## What You Need to Run This
 
 Before you start playing with this, make sure you have:
-- Python 3.8 or newer
-- pip (to install Python packages)
-- Docker (if you want to run it in containers)
+- Docker (to run it in containers) - [Install Docker Desktop](https://www.docker.com/products/docker-desktop)
 - A Docker Hub account (for pulling the latest image)
+
 
 ## How the API Works
 
@@ -54,6 +53,9 @@ The easiest way to run this is using the pre-built image from Docker Hub:
 
 1. Pull the latest image:
 ```bash
+# Make sure Docker Desktop is running
+# Log in to Docker Hub first
+# This will pull latest image available
 docker pull alapdevops/mlops-repo:latest
 ```
 
@@ -88,7 +90,7 @@ You should see something like:
 }
 ```
 
-## Want to Help?
+## For Local Development
 
 Here's how to get started:
 
@@ -101,6 +103,10 @@ cd mlops-project
 # Clone the repository
 git clone https://github.com/ralphtorrejos-devops/pipeline-mlops-test.git
 cd pipeline-mlops-test
+
+# Install required Python packages from requirements.txt
+# This will install Flask, scikit-learn, joblib, and other dependencies
+pip install -r requirements.txt
 ```
 
 2. **Create a New Branch**:
