@@ -1,4 +1,4 @@
-# ML API for prediction service
+# ML API for prediction service, this is for MLOPS test
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
