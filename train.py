@@ -1,3 +1,6 @@
+# Diabetes Model Training
+# Created by Ralph Torrejos
+
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
