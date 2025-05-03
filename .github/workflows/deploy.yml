@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]  # This workflow runs when you push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest  # Use a Linux server in the cloud for the job
+    steps:
+      - uses: actions/checkout@v3  # Step 1: Download your code from GitHub
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # Step 2: Install Python 3.10
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Step 3: Install your Python libraries
+
+      - name: Retrain Model
+        run: python train.py  # Step 4: Retrain your model with the latest data
+
+      - name: Build Docker image
+        run: docker build -t ml-flask-api:latest .  # Step 5: Build a new Docker image
+
+      # Optional: Add steps here to push the image to Docker Hub or deploy to a server
