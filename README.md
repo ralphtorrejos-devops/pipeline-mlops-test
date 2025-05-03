@@ -183,7 +183,6 @@ You'll get an error message:
 
 
 
-
 ## Pipeline Configuration
 
 ### GitHub Actions Pipeline
@@ -210,61 +209,38 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # This workflow runs when you push to the main branch
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use a Linux server in the cloud for the job
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # Step 1: Download your code from GitHub
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.10'  # Step 2: Install Python 3.10
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt  # Step 3: Install your Python libraries
+
       - name: Retrain Model
-        run: python train.py
+        run: python train.py  # Step 4: Retrain your model with the latest data
+
       - name: Build Docker image
-        run: docker build -t alapdevops/mlops-repo:latest .
+        run: docker build -t alapdevops/mlops-repo:latest .  # Step 5: Build a new Docker image
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Push to Docker Hub
         run: |
           docker push alapdevops/mlops-repo:latest
 ```
-
-### Deployment Instructions
-
-1. Local Deployment:
-   ```bash
-   # Pull the latest image from Docker Hub
-   docker pull alapdevops/mlops-repo:latest
-   
-   # Run the container
-   docker run -p 5000:5000 alapdevops/mlops-repo:latest
-   ```
-
-2. Docker Hub Deployment:
-   - The image is automatically pushed to Docker Hub when changes are pushed to the main branch
-   - To use the deployed image:
-     ```bash
-     docker pull alapdevops/mlops-repo:latest
-     docker run -p 5000:5000 alapdevops/mlops-repo:latest
-     ```
-
-### Required Secrets
-To enable Docker Hub deployment, you need to set up these secrets in your GitHub repository:
-1. `DOCKERHUB_USERNAME`: Your Docker Hub username
-2. `DOCKERHUB_TOKEN`: Your Docker Hub access token
-
-To set up these secrets:
-1. Go to your GitHub repository settings
-2. Navigate to "Secrets and variables" → "Actions"
-3. Add new repository secrets with the above names and values
 
 ## Contributing
 
