@@ -122,7 +122,7 @@ git checkout -b feature/your-feature-name
 Once your pull request is approved and merged:
 1. The MLOPs pipeline automatically triggers
 2. A new Docker image is built with your changes
-3. The image is automatically pushed to Docker Hub
+3. The image is automatically pushed to Docker Hub Repo (https://hub.docker.com/repository/docker/alapdevops/mlops-repo/general)
 4. The latest version becomes available for everyone to use
 
 This automated process ensures that:
