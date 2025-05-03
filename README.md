@@ -80,16 +80,11 @@ The `Dockerfile` sets up:
 - Exposes port 5000
 - Runs app.py as the container command
 
-### Build and Run
+### Docker Build
 ```bash
 # Build the Docker image
 docker build -t ml-flask-api:latest .
 
-# Run the container
-docker run -p 5000:5000 ml-flask-api:latest
-
-# Note: The image name 'ml-flask-api:latest' matches the GitHub Actions pipeline configuration
-```
 
 ## API Implementation
 
@@ -105,14 +100,21 @@ The API runs on:
 
 ### Quick Start
 1. Start the server:
-```bash
-python app.py
-```
+   - Open a terminal window
+   - Navigate to the project directory
+   - Run the following command:
+   ```bash
+   python app.py
+   ```
+   - Keep this terminal window open as the server needs to keep running
+   - The server will be available at http://localhost:5000
 
 2. Test the API:
-```bash
-curl -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d "{\"features\": [4, 127, 88, 11, 155, 34.5, 0.598, 28]}"
-```
+   - Open a new terminal window
+   - Execute the following command:
+   ```bash
+   curl -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d "{\"features\": [4, 127, 88, 11, 155, 34.5, 0.598, 28]}"
+   ```
 
 ## Features
 The model expects these 8 features in order:
@@ -181,28 +183,6 @@ You'll get an error message:
 
 
 
-## Container Deployment
-
-### Build
-```bash
-# Make sure you're in the project directory
-# Build the Docker image:
-
-docker build -t ml-api .
-
-# This might take a few minutes the first time
-# The -t flag names the image 'ml-api'
-```
-
-### Run
-```bash
-# Run the container:
-
-docker run -p 5000:5000 ml-api
-
-# -p 5000:5000 maps port 5000 from container to your machine
-# The API will be available at http://localhost:5000
-```
 
 ## Pipeline Configuration
 
@@ -216,9 +196,13 @@ The project uses GitHub Actions for CI/CD, configured in `.github/workflows/depl
    - Retrains the ML model with latest data
    - Builds the Docker image
 
-2. **Deployment** (Manual)
-   - Currently, the pipeline builds the Docker image but doesn't automatically deploy it
-   - Deployment can be done manually using the built image
+2. **Deployment** (Automated)
+   - The pipeline automatically:
+     - Sets up Python 3.10 environment
+     - Installs project dependencies
+     - Retrains the ML model with latest data
+     - Builds the Docker image with tag `alapdevops/mlops-repo:latest`
+     - Pushes the image to Docker Hub for distribution
 
 #### Pipeline Configuration
 ```yaml
@@ -242,11 +226,45 @@ jobs:
       - name: Retrain Model
         run: python train.py
       - name: Build Docker image
-        run: docker build -t ml-flask-api:latest .
+        run: docker build -t alapdevops/mlops-repo:latest .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push to Docker Hub
+        run: |
+          docker push alapdevops/mlops-repo:latest
 ```
 
-#### Current Deployment Options
-After the pipeline runs successfully, you can deploy the application using the built Docker image (manually not included in the pipeline)
+### Deployment Instructions
+
+1. Local Deployment:
+   ```bash
+   # Pull the latest image from Docker Hub
+   docker pull alapdevops/mlops-repo:latest
+   
+   # Run the container
+   docker run -p 5000:5000 alapdevops/mlops-repo:latest
+   ```
+
+2. Docker Hub Deployment:
+   - The image is automatically pushed to Docker Hub when changes are pushed to the main branch
+   - To use the deployed image:
+     ```bash
+     docker pull alapdevops/mlops-repo:latest
+     docker run -p 5000:5000 alapdevops/mlops-repo:latest
+     ```
+
+### Required Secrets
+To enable Docker Hub deployment, you need to set up these secrets in your GitHub repository:
+1. `DOCKERHUB_USERNAME`: Your Docker Hub username
+2. `DOCKERHUB_TOKEN`: Your Docker Hub access token
+
+To set up these secrets:
+1. Go to your GitHub repository settings
+2. Navigate to "Secrets and variables" → "Actions"
+3. Add new repository secrets with the above names and values
 
 ## Contributing
 
